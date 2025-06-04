@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swag_Dracula's Horror Bingo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Crimson+Text:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #0d0d0d url('images/fog-noise.gif') repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'Crimson Text', serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 60%, rgba(60,0,0,0.25) 0%, transparent 80%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #1a0000 80%, #330000 100%);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 80px 10px #000,
+                0 0 0 12px #2a0000,
+                0 8px 40px 0 #000 inset;
+            width: 95%;
+            max-width: 800px;
+            border: 8px solid #000;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Creepster', cursive;
+            color: #ff2a2a;
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #000, 0 0 12px #ff000055;
+        }
+
+        .game-title {
+            color: #ff4444;
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .user-info {
+            color: #aaa;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        
+        .user-info strong {
+            color: #ff4444;
+            font-weight: 600;
+        }
+
+        .bingo-card {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        .bingo-cell {
+            background: linear-gradient(145deg, #220000 80%, #3a0000 100%);
+            border: 2px solid #ff2a2a33;
+            border-radius: 8px;
+            padding: 10px;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.95em;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 8px #0007, 0 0 0 1px #ff2a2a33 inset;
+        }
+
+        .bingo-cell:hover {
+            background: linear-gradient(145deg, #2a0000 80%, #4a0000 100%);
+            transform: scale(1.03);
+        }
+
+        .bingo-cell.marked {
+            background: linear-gradient(145deg, #4d0000 80%, #6a0000 100%);
+            border: 2px solid #ff2a2a;
+            box-shadow: 0 0 15px rgba(255, 42, 42, 0.4), 0 0 0 1px #ff2a2a inset;
+            transform: scale(1.02);
+        }
+
+        .bingo-cell.free-space {
+            background: linear-gradient(145deg, #4d0000 80%, #6a0000 100%);
+            font-weight: bold;
+            color: #ff2a2a;
+            font-size: 1.1em;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: linear-gradient(90deg, #8B0000 60%, #ff2a2a 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-family: 'Creepster', cursive;
+            font-size: 1.2em;
+            letter-spacing: 1.5px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px #0007, 0 0 0 2px #ff2a2a33;
+            text-align: center;
+        }
+
+        .back-link:hover {
+            background: linear-gradient(90deg, #ff2a2a 60%, #8B0000 100%);
+            transform: scale(1.06) rotate(-1deg);
+            box-shadow: 0 4px 16px #ff2a2a55, 0 0 0 3px #fff2;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            border-left: 3px solid #ff2a2a;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .bingo-cell {
+                min-height: 60px;
+                padding: 8px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Horror Bingo</h1>
+        <p class="game-title" id="gameTitle">Loading game...</p>
+        <p class="user-info">Card for: <strong id="username">Loading...</strong></p>
+
+        <div class="bingo-card" id="bingoCard">
+            <!-- Bingo cells will be created dynamically with JavaScript -->
+        </div>
+
+        <div class="instructions">
+            <p>Click on a square to mark it when you encounter something in the stream. Get 5 in a row (horizontal, vertical, or diagonal) for BINGO!</p>
+        </div>
+
+        <a href="index.html" class="back-link">Return to Haunted TV</a>
+    </div>
+
+    <script>
+        // Games and their corresponding bingo items
+        const GAMES = {
+            "default": [
+                "Jump scare", "Character screams", "Doors won't open", "Flickering lights",
+                "Someone says 'Hello?'", "Blood trail", "Creepy doll", "Broken radio/phone",
+                "Character trips while running", "Mysterious figure in distance", "Locked door",
+                "Creepy music box", "Someone says 'Is anyone there?'", "Power goes out",
+                "Mysterious whispers", "Bathroom scene", "Something behind you", "Car won't start",
+                "Abandoned building", "Flashlight fails", "Axe/knife used as weapon", "Ghost child",
+                "Photo/portrait with moving eyes", "Someone says 'We need to leave'", "Protagonist alone"
+            ],
+            "resident-evil": [
+                "Zombie dog attack", "Herb collection", "Limited inventory space", "Zombie headshot",
+                "Key item found", "Puzzle solving", "Safe room music", "Typewriter save point",
+                "Blocked path", "Character gets grabbed", "Jump scare", "Healing item used",
+                "Boss encounter", "Running low on ammo", "Backtracking", "Document/file found",
+                "Secret passage", "Character comments on situation", "Creepy painting", "Zombie breaks through wall",
+                "Special weapon found", "Zombie gets back up", "Locked door", "Environmental hazard", "Mysterious figure"
+            ],
+            "silent-hill": [
+                "Radio static", "Fog", "Otherworld transition", "Pyramid Head appears",
+                "Flashlight used", "Mannequin/doll", "Strange symbol/cult marking", "Cryptic message/note",
+                "Locked door", "Character questions reality", "Map is updated", "Hospital scene",
+                "Weird creature", "Health drink found", "Running from monster", "Psychological horror moment",
+                "Character from past", "Rusty/bloody environment", "Creepy music", "Silent moment",
+                "Someone mentions the town", "Abstract nightmare", "Broken radio/phone", "Ghost child", "Personal trauma reference"
+            ],
+            "outlast": [
+                "Camera night vision", "Battery collection", "Character hides", "Document found",
+                "Being chased", "Gore scene", "Religious reference", "Camera breaks/glitches",
+                "Creepy patient", "Jumpscare", "Character comments on situation", "Ventilation escape",
+                "Security footage", "Character gets injured", "Stealth section", "Scientist/doctor appears",
+                "Bloody message on wall", "Screaming in distance", "Someone watches you", "No weapon available",
+                "Disturbing experiment", "Character panics", "Locked door", "Tight squeeze through gap", "Breathing sounds"
+            ],
+            "dont-scream": [
+                "Streamer visibly jumps", "Microphone peaks", "Whispering to stay quiet", "Sharp inhale",
+                "Holding breath", "Objects moving on their own", "Sudden loud noise", "Streamer covers mouth",
+                "Something appears behind player", "Face appears suddenly", "Fake-out scare", "Unexpected shadow",
+                "Creature crawls on ceiling/walls", "Doors close by themselves", "Audio distortion effect", 
+                "Heart monitor spikes", "Streamer says 'I can do this'", "Near-scream moment", "Turning around to nothing", 
+                "Night vision/darkness", "Reflections/mirrors", "Light flickers out", "Music cuts suddenly",
+                "Whispering/voices", "Footsteps when nobody's there"
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username') || 'Anonymous';
+            const game = urlParams.get('game') || 'default';
+            
+            // Update the display with user info and game
+            document.getElementById('username').textContent = username;
+            document.getElementById('gameTitle').textContent = formatGameName(game);
+            
+            // Generate and display the bingo card
+            generateBingoCard(username, game);
+            
+            // Save to localStorage to keep state across refreshes
+            saveCardToLocalStorage(username, game);
+        });
+
+        function formatGameName(gameSlug) {
+            // Format the game name for display (e.g., "resident-evil" -> "Resident Evil")
+            if (gameSlug === 'default') return "Horror Game";
+            
+            return gameSlug.split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        function generateBingoCard(username, gameType) {
+            const bingoCardElement = document.getElementById('bingoCard');
+            bingoCardElement.innerHTML = '';
+            
+            // Get the items for this game
+            const gameItems = GAMES[gameType] || GAMES['default'];
+            
+            // Generate a seed based on the username and game for consistent randomization
+            const seed = hashCode(username + gameType);
+            
+            // Select 24 random items (leave center for FREE space)
+            const randomItems = getRandomItemsWithSeed(gameItems, 24, seed);
+            
+            // Create a 5x5 grid
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'bingo-cell';
+                
+                // Center cell is the FREE space
+                if (i === 12) { // Middle cell (3rd row, 3rd column)
+                    cell.textContent = 'FREE SPACE';
+                    cell.className += ' free-space marked';
+                } else {
+                    // Get text for other cells
+                    const itemIndex = i > 12 ? i - 1 : i;
+                    cell.textContent = randomItems[itemIndex];
+                    
+                    // Check if this cell was previously marked
+                    if (isCellMarked(username, gameType, i)) {
+                        cell.className += ' marked';
+                    }
+                    
+                    // Add click event to toggle marking
+                    cell.addEventListener('click', function() {
+                        this.classList.toggle('marked');
+                        saveMarkedState(username, gameType, i, this.classList.contains('marked'));
+                    });
+                }
+                
+                bingoCardElement.appendChild(cell);
+            }
+        }
+
+        // Consistent random number generator using a seed
+        function seededRandom(seed) {
+            let m = 2**35 - 31;
+            let a = 185852;
+            let s = seed % m;
+            return function() {
+                return (s = s * a % m) / m;
+            };
+        }
+
+        // Hash function to generate a number from username string
+        function hashCode(str) {
+            let hash = 0;
+            if (str.length === 0) return hash;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return Math.abs(hash);
+        }
+
+        // Get random items with a consistent seed
+        function getRandomItemsWithSeed(items, count, seed) {
+            const random = seededRandom(seed);
+            const result = [...items];
+            
+            // Fisher-Yates shuffle with seeded random
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(random() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+            
+            return result.slice(0, count);
+        }
+
+        // Storage functions to maintain state across refreshes
+        function saveCardToLocalStorage(username, gameType) {
+            const key = `bingo_${username}_${gameType}`;
+            localStorage.setItem(key + '_visited', 'true');
+        }
+
+        function saveMarkedState(username, gameType, cellIndex, isMarked) {
+            const key = `bingo_${username}_${gameType}_cell_${cellIndex}`;
+            localStorage.setItem(key, isMarked ? 'marked' : '');
+        }
+
+        function isCellMarked(username, gameType, cellIndex) {
+            const key = `bingo_${username}_${gameType}_cell_${cellIndex}`;
+            return localStorage.getItem(key) === 'marked';
+        }
+    </script>
+</body>
+</html>

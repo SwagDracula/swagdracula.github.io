@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swag_Dracula's Haunted TV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=IM+Fell+DW+Pica&display=swap" rel="stylesheet">
+    <style>
+        /* style.css content */
+        body {
+            background-color: #0d0d0d; /* Even darker background */
+            color: #c0c0c0; /* Light silver/grey text */
+            font-family: 'IM Fell DW Pica', serif; /* Old-style serif for body */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .tv-container {
+            background-color: #1a0000; /* Deep, dark red-black, like old mahogany or dried blood */
+            padding: 25px;
+            border-radius: 25px; /* Slightly less round for a boxier old TV */
+            box-shadow: 0 0 50px rgba(0,0,0,0.9), inset 0 0 25px rgba(0,0,0,0.7);
+            width: 90vw; /* Responsive width */
+            max-width: 1200px;
+            border: 8px solid #000000; /* Thicker black border */
+        }
+
+        .tv-screen-border {
+            background-color: #050505; /* Very dark grey, almost black */
+            border-radius: 15px; /* Sharper inner screen border */
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+            border: 4px solid #220000; /* Dark red inner bezel */
+        }
+
+        .tv-screen {
+            background-color: #080810; /* Dark, slightly desaturated blue for CRT */
+            width: 100%;
+            aspect-ratio: 16 / 9; /* Keeping 16/9 for modern embeds */
+            border-radius: 10px; /* Subtle curve */
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 30px rgba(100, 0, 0, 0.35), /* Dim, ominous red glow */
+                        inset 0 0 15px #000000,
+                        inset 0 0 100px rgba(50, 0, 0, 0.2); /* Faint inner red glow */
+        }
+
+        .tv-screen::before { /* Scanlines */
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(10, 0, 0, 0) 50%, rgba(0, 0, 0, 0.35) 50%), linear-gradient(90deg, rgba(100, 0, 0, 0.04), rgba(0, 50, 0, 0.01), rgba(0, 0, 100, 0.04));
+            z-index: 2;
+            background-size: 100% 4px, 5px 100%; /* Thicker, more visible scanlines */
+            pointer-events: none;
+            opacity: 0.2; /* More pronounced scanlines */
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.2; }
+            50% { opacity: 0.15; }
+            100% { opacity: 0.22; }
+        }
+
+        .channel-content {
+            padding: 30px; /* More padding */
+            display: none;
+            height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 1;
+            color: #b3b3b3; /* Slightly brighter for readability on dark screen */
+        }
+        .channel-content p {
+            line-height: 1.7;
+            font-size: 1.1em;
+        }
+
+        .channel-content.active {
+            display: block;
+        }
+
+        .channel-content h1, .channel-content h2 {
+            font-family: 'Creepster', cursive; /* THE SHINING inspired font */
+            color: #990000; /* Blood red */
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            font-size: 3em; /* Larger, more impactful */
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 0px #000, 2px 2px 0px #440000; /* Sharper, darker shadow */
+        }
+        .channel-content h2 {
+            font-size: 2.5em;
+        }
+
+
+        .channel-content pre { /* TV Guide */
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            color: #66ff66; /* Sickly green */
+            background-color: rgba(0,10,0,0.5);
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #003300;
+            font-size: 1em;
+            line-height: 1.6;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+        }
+
+        .tv-controls {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background-color: #110000; /* Very dark red */
+            border-radius: 10px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            border-top: 3px solid #330000;
+        }
+
+        .tv-controls h3 {
+            font-family: 'Creepster', cursive;
+            margin: 0 0 15px 0;
+            color: #aa0000; /* Darker red for "CHANNELS" */
+            font-size: 1.8em;
+            letter-spacing: 1px;
+        }
+
+        .tv-controls button {
+            background: linear-gradient(to bottom, #4d0000, #2a0000); /* Dark red gradient */
+            color: #bcbcbc; /* Off-white/silver text */
+            border: 2px solid #660000; /* Blood red border */
+            border-top-color: #800000;
+            border-bottom-color: #1a0000;
+            padding: 12px 20px;
+            margin: 8px;
+            border-radius: 5px; /* Sharper edges */
+            cursor: pointer;
+            font-family: 'Creepster', cursive; /* Creepy font for buttons */
+            font-weight: normal; /* Creepster is bold by nature */
+            font-size: 1.2em; /* Larger button text */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,50,50,0.1);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+        }
+
+        .tv-controls button:hover {
+            background: linear-gradient(to bottom, #660000, #400000); /* Brighter red on hover */
+            color: #ffffff;
+            border-color: #990000;
+            box-shadow: 0 5px 8px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,100,100,0.2);
+        }
+
+        .tv-controls button:active {
+            background: linear-gradient(to top, #4d0000, #2a0000);
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.8), 0 1px 1px rgba(0,0,0,0.6);
+            transform: translateY(2px);
+        }
+
+        .social-button-container {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            align-items: center; /* Center buttons */
+            gap: 15px; /* Space between buttons */
+            margin-top: 20px;
+        }
+
+        .social-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #8B0000; /* DarkRed */
+            color: #f0f0f0;
+            text-decoration: none;
+            border-radius: 5px;
+            font-family: 'Creepster', cursive;
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-align: center;
+            min-width: 200px; /* Ensure buttons have some width */
+        }
+        .social-button:hover {
+            background-color: #B22222; /* FireBrick */
+            transform: scale(1.05);
+        }
+
+        .twitch-embed-container, #youtube-player-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000; /* Black background for video player area */
+        }
+        .twitch-embed-container iframe, #youtube-player-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #youtube-player-container p { /* Placeholder text for YouTube */
+            color: #ffcc00;
+            text-align: center;
+        }
+
+
+        .tv-screen.channel-change-static {
+            animation: intenseStatic 0.35s forwards; /* Slightly longer static */
+        }
+
+        @keyframes intenseStatic { /* Updated static to be more red/dark */
+            0% { opacity: 1; background-image: url('images/tv-static-animated.gif'); background-color: #330000; background-blend-mode: screen; background-size: cover; }
+            80% { opacity: 1; background-image: url('images/tv-static-animated.gif'); background-color: #220000; background-blend-mode: screen; background-size: cover; }
+            100% { opacity: 1; background: #080810; }
+        }
+
+        .jumpscare-element {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(50, 0, 0, 0.85); /* Dark red overlay */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .jumpscare-element img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            animation: fadeInOutSuperFast 0.5s forwards; /* Quicker scare */
+            border: 4px solid #ff0000; /* Bright red border */
+        }
+
+        @keyframes fadeInOutSuperFast {
+            0% { opacity: 0; transform: scale(0.7) rotate(-5deg); }
+            20% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+            70% { opacity: 1; transform: scale(1.15) rotate(-2deg); }
+            100% { opacity: 0; transform: scale(0.8) rotate(10deg); }
+        }
+
+        .about-me-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(0,0,0,0.3);
+            border-left: 3px solid #8B0000;
+            border-radius: 4px;
+        }
+        .about-me-section p {
+            font-size: 1em;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="tv-container">
+        <div class="tv-screen-border">
+            <div class="tv-screen">
+                <!-- Channel Content Will Load Here -->
+                <div id="channel-welcome" class="channel-content active">
+                    <h1>Welcome, Mortals!</h1>
+                    <p style="text-align:center;">You've tuned into Swag_Dracula's Broadcast. Press a channel button below... if you dare.</p>
+                    <p style="text-align:center; font-size: 0.9em; color: #777;">(Ensure your audio is enabled for maximum dread)</p>
+                
+                    <div class="about-me-section">
+                        <h2>About Your Host</h2>
+                        <!-- USER: REPLACE THIS WITH YOUR ABOUT ME TEXT -->
+                        <p>Here lies the tale of Swag_Dracula, your guide through realms of terror and digital dread. The Host of the most interactive stream on Twitch. Men want him, Women want to be him, Fish fear him. He's traded a castle for the luxurious confines of a haunted television. Feel free to let him invade your screen time, and rest easy that if you leave him on all night there wont be a 3am Girls Gone Wild commercial.</p>
+                        <p>Tune in for spine-chilling gameplay, mind-bending discussions, and the occasional existential crisis. All Stream and No Play makes chat a dull chatter.</p>
+                    </div>
+                </div>
+
+                <div id="channel-live" class="channel-content">
+                    <h2>Channel 03: LIVE FROM THE CRYPT</h2>
+                    <div class="twitch-embed-container">
+                         <iframe src="https://player.twitch.tv/?channel=swag_dracula&parent=www.example.com" frameborder="0" allowfullscreen="true" scrolling="no" height="378" width="620"></iframe>
+                    </div>
+                </div>
+
+                <div id="channel-tv-guide" class="channel-content">
+                    <h2>Channel 01: GRIM SCHEDULE</h2>
+                    <pre>
+<!-- Edit your schedule below -->
+MONDAY:   No Scheduled Programming
+TUESDAY:   Crypt Content - 8 PM Central Time
+WEDNESDAY:   Midweek Madness - 8 PM Central Time
+THURSDAY:   No Scheduled Programming
+FRIDAY:   Hauntlet Fridays - 9 PM Central Time
+SATURDAY:   So Bad it's Scary - 8 PM Central Time
+SUNDAY:   True Crime - 7 PM Central Time
+
+*All times subject to lunar cycles and spectral interference.*
+                    </pre>
+                </div>
+
+                <div id="channel-youtube" class="channel-content">
+                    <h2>Channel 05: HISTORICAL VIDEO ARCHIVES</h2>
+                    <p style="text-align:center;">Behold, cursed recordings from the abyss (your YouTube VODs and highlights)! A random selection awaits.</p>
+                    <div id="youtube-player-container">
+                        <!-- YouTube Player Will Be Embedded Here by JS -->
+                        <p>Searching the archives...</p>
+                    </div>
+                </div>
+
+                <div id="channel-socials" class="channel-content">
+                    <h2>Channel 07: ECHOES FROM BEYOND (Socials)</h2>
+                    <p style="text-align:center;">Follow the whispers across other cursed networks:</p>
+                    <div class="social-button-container">
+                        <!-- REPLACE 'YOUR_TIKTOK_LINK_HERE' with your actual TikTok profile URL -->
+                        <a href="https://www.tiktok.com/@swag_dracula" target="_blank" class="social-button">TikTok Terrors</a>
+                        <!-- REPLACE 'YOUR_INSTAGRAM_LINK_HERE' with your actual Instagram profile URL -->
+                        <a href="https://www.instagram.com/officialswagdracula" target="_blank" class="social-button">Peep the Gram</a>    
+                        <a href="https://discord.gg/FfZYj67" target="_blank" class="social-button">Discord</a>
+			<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="social-button">Only Fangs</a>
+                    </div>
+                </div>
+                
+                <div id="channel-bingo" class="channel-content">
+                    <h2>Channel 13: BINGO OF THE DAMNED</h2>
+                    <p style="text-align:center;">Mark your cards for unspeakable horrors... This unholy feature is still brewing in the cauldron.</p>
+                    <p style="text-align:center; font-size:0.9em; color:#777;">(Bingo card generator coming soon!)</p>
+                </div>
+
+
+                <div id="channel-bonus" class="channel-content"> <!-- Kept this as a template for future use -->
+                    <h2>Channel ???: STATIC VOID</h2>
+                    <p style="text-align:center;">This frequency is... unstable. What horrors might it unveil?</p>
+                </div>
+
+                <div id="jumpscare-overlay" class="jumpscare-element">
+                    <img id="jumpscare-image" src="" alt="!" />
+                </div>
+            </div>
+        </div>
+
+        <div class="tv-controls">
+            <h3>CHANNELS</h3>
+            <button onclick="changeChannel('channel-welcome')">Welcome</button>
+            <button onclick="changeChannel('channel-live')">03 LIVE</button>
+            <button onclick="changeChannel('channel-tv-guide')">01 Schedule</button>
+            <button onclick="changeChannel('channel-youtube')">05 YouTube</button>
+            <button onclick="changeChannel('channel-socials')">07 Socials</button>
+            <button onclick="changeChannel('channel-bingo')">13 Bingo</button>
+            <!-- <button onclick="changeChannel('channel-bonus')">???</button> --> <!-- Bonus channel can be re-enabled if needed -->
+        </div>
+    </div>
+
+    <audio id="static-sound" src="sounds/tv-static-burst.mp3" preload="auto"></audio>
+    <audio id="knock-sound" src="sounds/knock-on-tv.mp3" preload="auto"></audio>
+
+    <script>
+        // --- DOM Element References ---
+        const staticSound = document.getElementById('static-sound');
+        const knockSound = document.getElementById('knock-sound');
+        const jumpScareOverlay = document.getElementById('jumpscare-overlay');
+        const jumpScareImage = document.getElementById('jumpscare-image');
+        const tvScreen = document.querySelector('.tv-screen');
+        const youtubePlayerContainer = document.getElementById('youtube-player-container');
+
+        // --- Configuration for Haunted Effects ---
+        const HAUNTED_EFFECT_PROBABILITY = 0.15; // Increased chance for spookiness
+        const JUMPSCARE_IMAGE_SRC = 'images/spooky-face.gif'; // 
+        const STATIC_GIF_SRC = 'images/tv-static-animated.mp4'; // 
+
+        // --- YouTube Configuration ---
+        // USER: Replace these with your actual YouTube Video IDs
+        const YOUTUBE_VIDEO_IDS = [
+            "NDNzptGeUcY", // Rick Astley - Never Gonna Give You Up (Placeholder)
+            "QatzNQeW_N0", // Another placeholder
+            "tVNizsrGu8c",
+	    "TUQJIuMjRM0"  // And another one
+            // Add more of YOUR video IDs here, e.g., "yourVideoId1", "yourVideoId2"
+        ];
+        let currentYoutubeVideoId = null; // To avoid re-embedding the same video if channel is re-clicked quickly
+
+        function playSound(soundElement) {
+            if (soundElement && soundElement.src) {
+                soundElement.currentTime = 0;
+                soundElement.play().catch(e => console.error("Sound Error:", e.message, soundElement.src));
+            } else {
+                console.warn("Invalid soundElement or src:", soundElement);
+            }
+        }
+
+        function triggerVisualScare() {
+            if (jumpScareOverlay && jumpScareImage && JUMPSCARE_IMAGE_SRC && JUMPSCARE_IMAGE_SRC !== 'images/your-scary-image.png') {
+                jumpScareImage.src = JUMPSCARE_IMAGE_SRC;
+                jumpScareOverlay.style.display = 'flex';
+                setTimeout(() => {
+                    jumpScareOverlay.style.display = 'none';
+                }, 500); // Quicker scare duration
+            } else {
+                console.warn("Jumpscare not configured or using placeholder image.");
+            }
+        }
+
+        function triggerChannelChangeStaticVisual() {
+            if (tvScreen) {
+                tvScreen.classList.add('channel-change-static');
+                setTimeout(() => {
+                    tvScreen.classList.remove('channel-change-static');
+                }, 350);
+            }
+        }
+
+        function playHauntedEffect() {
+            const effects = ['knock', 'jumpscare', 'quick_static_flicker'];
+            const chosenEffect = effects[Math.floor(Math.random() * effects.length)];
+            console.log("Haunted effect:", chosenEffect);
+
+            switch (chosenEffect) {
+                case 'knock':
+                    playSound(knockSound);
+                    break;
+                case 'jumpscare':
+                    triggerVisualScare();
+                    break;
+                case 'quick_static_flicker': // A more subtle, quick visual glitch
+                    const originalOpacity = tvScreen.style.opacity;
+                    tvScreen.style.transition = 'opacity 0.05s ease-in-out';
+                    tvScreen.style.opacity = '0.7';
+                    setTimeout(() => tvScreen.style.opacity = '0.4', 50);
+                    setTimeout(() => tvScreen.style.opacity = '0.8', 100);
+                    setTimeout(() => {
+                        tvScreen.style.opacity = originalOpacity;
+                        tvScreen.style.transition = ''; // Reset transition
+                    }, 150);
+                    break;
+            }
+        }
+
+        function loadYouTubeVideo() {
+            if (YOUTUBE_VIDEO_IDS.length === 0) {
+                youtubePlayerContainer.innerHTML = "<p>No videos in the cursed archives yet. Add video IDs!</p>";
+                return;
+            }
+            let randomVideoId = YOUTUBE_VIDEO_IDS[Math.floor(Math.random() * YOUTUBE_VIDEO_IDS.length)];
+            
+            // Avoid immediately reloading the exact same video if channel is clicked multiple times
+            if (randomVideoId === currentYoutubeVideoId && YOUTUBE_VIDEO_IDS.length > 1) {
+                // Try to pick a different one if possible
+                let attempts = 0;
+                while (randomVideoId === currentYoutubeVideoId && attempts < 5) {
+                    randomVideoId = YOUTUBE_VIDEO_IDS[Math.floor(Math.random() * YOUTUBE_VIDEO_IDS.length)];
+                    attempts++;
+                }
+            }
+            currentYoutubeVideoId = randomVideoId;
+
+            youtubePlayerContainer.innerHTML = `
+                <iframe 
+                    width="100%" 
+                    height="100%" 
+                    src="https://www.youtube.com/embed/${randomVideoId}?autoplay=1&mute=0&modestbranding=1&rel=0" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>`;
+                // Note: autoplay might be restricted by browsers. Mute=1 often helps, but for main content, mute=0 is desired.
+        }
+
+        function stopYouTubeVideo() {
+             if (youtubePlayerContainer) {
+                // Replacing innerHTML effectively stops the video by removing the iframe
+                youtubePlayerContainer.innerHTML = "<p>Fading back to static...</p>";
+                currentYoutubeVideoId = null; // Reset current video
+            }
+        }
+
+        function changeChannel(channelId) {
+            const channels = document.querySelectorAll('.channel-content');
+            let previousChannelWasYoutube = false;
+            channels.forEach(channel => {
+                if (channel.classList.contains('active') && channel.id === 'channel-youtube') {
+                    previousChannelWasYoutube = true;
+                }
+                channel.classList.remove('active');
+            });
+
+            if (previousChannelWasYoutube && channelId !== 'channel-youtube') {
+                stopYouTubeVideo();
+            }
+
+            const selectedChannel = document.getElementById(channelId);
+            if (selectedChannel) {
+                selectedChannel.classList.add('active');
+                if (channelId === 'channel-youtube') {
+                    loadYouTubeVideo();
+                }
+            } else {
+                console.error("Channel ID '" + channelId + "' not found!");
+                document.getElementById('channel-welcome').classList.add('active'); // Fallback
+                return;
+            }
+
+            playSound(staticSound);
+            triggerChannelChangeStaticVisual();
+
+            if (Math.random() < HAUNTED_EFFECT_PROBABILITY) {
+                const randomDelay = 200 + Math.random() * 400;
+                setTimeout(playHauntedEffect, randomDelay);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (JUMPSCARE_IMAGE_SRC && JUMPSCARE_IMAGE_SRC !== 'images/your-scary-image.png') {
+                const img = new Image();
+                img.src = JUMPSCARE_IMAGE_SRC;
+            } else if (JUMPSCARE_IMAGE_SRC === 'images/your-scary-image.png') {
+                 console.warn("Reminder: JUMPSCARE_IMAGE_SRC is placeholder. Update for jump scares.");
+            }
+            if (STATIC_GIF_SRC && STATIC_GIF_SRC !== 'images/tv-static-animated.gif') {
+                const staticImg = new Image();
+                staticImg.src = STATIC_GIF_SRC;
+            }
+            setTimeout(() => {
+                changeChannel('channel-welcome');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
