@@ -131,6 +131,17 @@
             text-shadow: 0 1px 2px #000b;
             backdrop-filter: blur(1.5px) brightness(1.08);
         }
+        /* Special style for the live channel to prevent scrolling */
+        #channel-live.channel-content {
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        #channel-live h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
         .channel-content.active { display: block; }
         .channel-content h1, .channel-content h2 {
             font-family: 'Creepster', cursive;
