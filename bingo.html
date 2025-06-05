@@ -232,7 +232,14 @@
             // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const username = urlParams.get('username') || 'Anonymous';
-            const game = urlParams.get('game') || 'default';
+            
+            // Improved game parameter handling to normalize apostrophes and dashes
+            let game = urlParams.get('game') || 'default';
+            
+            // Handle aliases for games (especially for encoded apostrophes)
+            if (game === "don't-scream" || game === "don-t-scream") {
+                game = "dont-scream"; // Normalize to the version used in your GAMES object
+            }
             
             // Update the display with user info and game
             document.getElementById('username').textContent = username;
