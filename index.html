@@ -21,8 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            overflow-y: auto; /* Allow vertical scrolling */
+            overflow: hidden;
             position: relative;
         }
         body::before {
@@ -204,7 +203,7 @@
         /* Twitch/YouTube embed area */
         .twitch-embed-container, #youtube-player-container {
             width: 100%;
-            aspect-ratio: 16 / 9; /* Force 16:9 aspect ratio */
+            height: calc(100% - 80px); /* Increased space for the heading */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -344,27 +343,10 @@
 
         /* Responsive tweaks */
         @media (max-width: 900px) {
-            body {
-                align-items: flex-start; /* Align to top instead of center */
-                padding: 20px 0; /* Add padding to ensure spacing at top and bottom */
-                height: auto; /* Allow body to expand with content */
-            }
-            .tv-container { 
-                max-width: 95vw; 
-                padding: 10px;
-                margin: 20px auto; /* Center the container with auto margins */
-            }
+            .tv-container { max-width: 98vw; padding: 10px; }
             .tv-screen-border { padding: 8px; }
-            .channel-content { 
-                padding: 12px 6px 10px 6px; 
-            }
+            .channel-content { padding: 12px 6px 10px 6px; }
             .tv-controls { padding: 10px 0 6px 0; }
-            
-            /* Maintain aspect ratio for Twitch embed */
-            .tv-screen {
-                aspect-ratio: 16 / 9;
-                height: auto;
-            }
         }
         @media (max-width: 600px) {
             .tv-container { border-radius: 18px; }
