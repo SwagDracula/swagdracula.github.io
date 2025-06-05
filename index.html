@@ -122,29 +122,26 @@
         /* Channel content area */
         .channel-content {
             padding: 36px 36px 24px 36px;
-            display: none;
+            display: none; /* Hidden by default */
             height: 100%;
-            overflow-y: auto; /* Keep this to enable scrolling within channels */
+            overflow-y: auto;
             box-sizing: border-box;
-            position: relative;
+            position: relative; /* Not absolute */
             z-index: 4;
             color: #e0e0e0;
             text-shadow: 0 1px 2px #000b;
             backdrop-filter: blur(1.5px) brightness(1.08);
         }
-        .channel-content.active { display: block; }
-        .channel-content h1, .channel-content h2 {
-            font-family: 'Creepster', cursive;
-            color: #ff2a2a;
-            text-align: center;
-            margin-top: 12px;
-            margin-bottom: 22px;
-            font-size: 3.2em;
-            letter-spacing: 2.5px;
-            text-shadow: 2px 2px 0px #000, 0 0 12px #ff000055;
+
+        /* Only display when active */
+        .channel-content.active { 
+            display: block; 
         }
-        .channel-content h2 { font-size: 2.2em; color: #ff4444; }
-        .channel-content p { line-height: 1.8; font-size: 1.13em; }
+
+        /* Special handling for live channel */
+        #channel-live.channel-content.active {
+            display: flex;
+        }
 
         .about-me-section {
             margin-top: 24px;
@@ -351,26 +348,12 @@
             flex-direction: column;
             height: 100%;
             box-sizing: border-box;
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
         }
 
+        /* Keep the display:flex for when active */
         #channel-live.channel-content.active {
             display: flex;
-        }
-
-        #channel-live h2 {
-            margin: 0 0 8px 0;
-            font-size: 1.8em;
-            flex-shrink: 0;
-        }
-
-        #channel-live .twitch-embed-container {
-            flex-grow: 1;
-            margin: 0;
-            height: auto;
         }
 
         /* Twitch/YouTube embed area - update to fix sizing for channel-live */
