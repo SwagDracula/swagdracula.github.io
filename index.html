@@ -18,12 +18,14 @@
             font-family: 'Crimson Text', serif;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
             position: relative;
         }
+
         body::before {
             content: "";
             position: fixed;
@@ -122,7 +124,7 @@
             padding: 36px 36px 24px 36px;
             display: none;
             height: 100%;
-            overflow-y: auto;
+            overflow-y: auto; /* Keep this to enable scrolling within channels */
             box-sizing: border-box;
             position: relative;
             z-index: 4;
@@ -349,6 +351,10 @@
             flex-direction: column;
             height: 100%;
             box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
         }
 
         #channel-live.channel-content.active {
@@ -388,6 +394,21 @@
             .tv-screen { border-radius: 8px; }
             .tv-controls button { width: 38px; height: 38px; font-size: 0.9em; }
         }
+        @media (max-height: 800px) {
+    body {
+        padding: 10px;
+        height: auto;
+        display: block;
+    }
+    
+    .tv-container {
+        margin: 20px auto;
+    }
+    
+    .tv-screen {
+        min-height: 350px;
+    }
+}
     </style>
 </head>
 <body>
@@ -448,7 +469,7 @@ SUNDAY:   True Crime - 7 PM Central Time
                 </div>
 
                 <div id="channel-socials" class="channel-content">
-                    <h2>Channel 07: ECHOES FROM BEYOND (Socials)</h2>
+                    <h2>Channel 07: VOICES FROM BEYOND (Socials)</h2>
                     <p style="text-align:center;">Follow the whispers across other cursed networks:</p>
                     <div class="social-button-container">
                         <!-- REPLACE 'YOUR_TIKTOK_LINK_HERE' with your actual TikTok profile URL -->
