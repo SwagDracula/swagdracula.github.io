@@ -344,24 +344,37 @@
         #channel-live.channel-content {
             padding: 8px 8px 8px 8px;
             overflow: hidden;
-            display: flex;
+            display: none; /* Change from flex to none when not active */
             flex-direction: column;
             height: 100%;
             box-sizing: border-box;
             width: 100%;
+            /* Make sure there's NO position:absolute here */
         }
 
-        /* Keep the display:flex for when active */
+        /* Only show when active */
         #channel-live.channel-content.active {
-            display: flex;
+            display: flex; /* Only display as flex when active */
         }
 
-        /* Twitch/YouTube embed area - update to fix sizing for channel-live */
+        /* Make sure Twitch embed container doesn't have position:fixed or absolute */
         #channel-live .twitch-embed-container {
             width: 100%;
-            position: relative;
+            position: relative; /* Keep as relative */
             flex: 1;
-            min-height: 0; /* Critical for flex containers to shrink properly */
+            min-height: 0; 
+        }
+
+        /* Make sure iframe doesn't have any position issues */
+        .twitch-embed-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 0 12px #0008;
         }
 
         /* Responsive tweaks */
