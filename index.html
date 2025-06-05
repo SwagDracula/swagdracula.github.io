@@ -341,6 +341,40 @@
             transform: scale(0.97);
         }
 
+        /* Special style for the live channel to prevent scrolling */
+        #channel-live.channel-content {
+            padding: 8px 8px 8px 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        #channel-live.channel-content.active {
+            display: flex;
+        }
+
+        #channel-live h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+
+        #channel-live .twitch-embed-container {
+            flex-grow: 1;
+            margin: 0;
+            height: auto;
+        }
+
+        /* Twitch/YouTube embed area - update to fix sizing for channel-live */
+        #channel-live .twitch-embed-container {
+            width: 100%;
+            position: relative;
+            flex: 1;
+            min-height: 0; /* Critical for flex containers to shrink properly */
+        }
+
         /* Responsive tweaks */
         @media (max-width: 900px) {
             .tv-container { max-width: 98vw; padding: 10px; }
