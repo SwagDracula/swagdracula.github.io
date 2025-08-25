@@ -413,6 +413,149 @@
             box-shadow: 0 0 12px #0008;
         }
 
+        /* Wheel Channel Styles */
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .token-display {
+            background: linear-gradient(90deg, #2a0000 60%, #4d0000 100%);
+            color: #ff2a2a;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 2px solid #ff2a2a;
+            font-family: 'Creepster', cursive;
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            box-shadow: 0 0 12px #ff2a2a33;
+        }
+
+        .wheel-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 8px solid #ff2a2a;
+            position: relative;
+            background: conic-gradient(
+                #4d0000 0deg 45deg,
+                #2a0000 45deg 90deg,
+                #4d0000 90deg 135deg,
+                #2a0000 135deg 180deg,
+                #4d0000 180deg 225deg,
+                #2a0000 225deg 270deg,
+                #4d0000 270deg 315deg,
+                #2a0000 315deg 360deg
+            );
+            box-shadow: 0 0 20px #ff2a2a55, 0 0 40px #00000099 inset;
+            transition: transform 3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 20px;
+            font-family: 'Creepster', cursive;
+            font-size: 0.9em;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+            pointer-events: none;
+        }
+
+        .wheel-segment:nth-child(1) { transform: rotate(0deg); }
+        .wheel-segment:nth-child(2) { transform: rotate(45deg); }
+        .wheel-segment:nth-child(3) { transform: rotate(90deg); }
+        .wheel-segment:nth-child(4) { transform: rotate(135deg); }
+        .wheel-segment:nth-child(5) { transform: rotate(180deg); }
+        .wheel-segment:nth-child(6) { transform: rotate(225deg); }
+        .wheel-segment:nth-child(7) { transform: rotate(270deg); }
+        .wheel-segment:nth-child(8) { transform: rotate(315deg); }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ff2a2a;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px #000);
+        }
+
+        .spin-button {
+            background: linear-gradient(90deg, #8B0000 60%, #ff2a2a 100%);
+            color: #fff;
+            border: 3px solid #ff2a2a;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-family: 'Creepster', cursive;
+            font-size: 1.2em;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px #000a, 0 0 0 2px #ff2a2a33;
+            text-transform: uppercase;
+        }
+
+        .spin-button:hover {
+            background: linear-gradient(90deg, #ff2a2a 60%, #8B0000 100%);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px #ff2a2a55;
+        }
+
+        .spin-button:disabled {
+            background: #333;
+            color: #666;
+            border-color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .wheel-instructions {
+            background: linear-gradient(90deg, rgba(0,0,0,0.38), rgba(60,0,0,0.22));
+            border-left: 4px solid #ff2a2a;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            max-width: 400px;
+        }
+
+        .wheel-instructions p {
+            margin: 8px 0;
+            font-size: 1em;
+            color: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            .wheel {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .wheel-segment {
+                font-size: 0.8em;
+                padding-top: 15px;
+            }
+        }
+
         /* Responsive tweaks */
         @media (max-width: 900px) {
             .tv-container { max-width: 98vw; padding: 10px; }
@@ -532,6 +675,41 @@ SUNDAY:   True Crime - 7 PM Central Time
                     </div>
                 </div>
 
+                <div id="channel-wheel" class="channel-content">
+                    <h2>Channel 666: WHEEL OF TERROR</h2>
+                    <p style="text-align:center;">Spin the wheel using tokens earned from gifting subs! Each spin triggers a random jumpscare...</p>
+                    
+                    <div class="wheel-container">
+                        <div class="token-display">
+                            <span>Tokens: <span id="token-count">0</span></span>
+                        </div>
+                        
+                        <div class="wheel-wrapper">
+                            <div class="wheel" id="spinWheel">
+                                <div class="wheel-segment" data-jumpscare="freddy">Freddy</div>
+                                <div class="wheel-segment" data-jumpscare="bonnie">Bonnie</div>
+                                <div class="wheel-segment" data-jumpscare="chica">Chica</div>
+                                <div class="wheel-segment" data-jumpscare="foxy">Foxy</div>
+                                <div class="wheel-segment" data-jumpscare="golden">Golden Freddy</div>
+                                <div class="wheel-segment" data-jumpscare="puppet">Puppet</div>
+                                <div class="wheel-segment" data-jumpscare="springtrap">Springtrap</div>
+                                <div class="wheel-segment" data-jumpscare="nightmare">Nightmare</div>
+                            </div>
+                            <div class="wheel-pointer"></div>
+                        </div>
+                        
+                        <button id="spin-button" class="spin-button" onclick="spinWheel()">
+                            SPIN THE WHEEL (1 Token)
+                        </button>
+                    </div>
+                    
+                    <div class="wheel-instructions">
+                        <p><strong>How to earn tokens:</strong></p>
+                        <p>• Gift a sub in Twitch chat = 1 token</p>
+                        <p>• Gift 5 subs = 5 tokens + 1 bonus token</p>
+                        <p>• Tokens sync automatically when you're logged in</p>
+                    </div>
+                </div>
 
                 <div id="channel-bonus" class="channel-content"> <!-- Kept this as a template for future use -->
                     <h2>Channel ???: STATIC VOID</h2>
@@ -553,7 +731,7 @@ SUNDAY:   True Crime - 7 PM Central Time
                 <button onclick="changeChannel('channel-youtube')" aria-label="YouTube"><span>05</span></button>
                 <button onclick="changeChannel('channel-socials')" aria-label="Socials"><span>07</span></button>
                 <button onclick="changeChannel('channel-bingo')" aria-label="Bingo"><span>13</span></button>
-                <!-- <button onclick="changeChannel('channel-bonus')" aria-label="Bonus"><span>???</span></button> --> <!-- Bonus channel can be re-enabled if needed -->
+                <button onclick="changeChannel('channel-wheel')" aria-label="Wheel"><span>666</span></button>
             </div>
         </div>
     </div>
@@ -716,6 +894,82 @@ SUNDAY:   True Crime - 7 PM Central Time
             }
         }
 
+        // Wheel functionality
+        const JUMPSCARES = {
+            freddy: 'images/freddy-jumpscare.gif',
+            bonnie: 'images/bonnie-jumpscare.gif',
+            chica: 'images/chica-jumpscare.gif',
+            foxy: 'images/foxy-jumpscare.gif',
+            golden: 'images/golden-freddy-jumpscare.gif',
+            puppet: 'images/puppet-jumpscare.gif',
+            springtrap: 'images/springtrap-jumpscare.gif',
+            nightmare: 'images/nightmare-jumpscare.gif'
+        };
+
+        let userTokens = 0;
+        let isSpinning = false;
+
+        function updateTokenDisplay() {
+            document.getElementById('token-count').textContent = userTokens;
+            document.getElementById('spin-button').disabled = userTokens < 1 || isSpinning;
+        }
+
+        function spinWheel() {
+            if (userTokens < 1 || isSpinning) return;
+            
+            isSpinning = true;
+            userTokens--;
+            updateTokenDisplay();
+            
+            const wheel = document.getElementById('spinWheel');
+            const segments = 8;
+            const segmentAngle = 360 / segments;
+            const randomSegment = Math.floor(Math.random() * segments);
+            const baseRotation = 360 * 5; // 5 full rotations
+            const finalRotation = baseRotation + (randomSegment * segmentAngle) + (segmentAngle / 2);
+            
+            wheel.style.transform = `rotate(${finalRotation}deg)`;
+            
+            setTimeout(() => {
+                const selectedSegment = document.querySelectorAll('.wheel-segment')[randomSegment];
+                const jumpscareType = selectedSegment.getAttribute('data-jumpscare');
+                triggerWheelJumpscare(jumpscareType);
+                
+                isSpinning = false;
+                updateTokenDisplay();
+            }, 3000);
+        }
+
+        function triggerWheelJumpscare(type) {
+            const jumpscareImage = document.getElementById('jumpscare-image');
+            const jumpscareOverlay = document.getElementById('jumpscare-overlay');
+            
+            if (JUMPSCARES[type]) {
+                jumpscareImage.src = JUMPSCARES[type];
+                jumpscareOverlay.style.display = 'flex';
+                
+                // Play a jumpscare sound if available
+                playSound(knockSound); // Using existing sound, replace with jumpscare sound
+                
+                setTimeout(() => {
+                    jumpscareOverlay.style.display = 'none';
+                }, 1000);
+            }
+        }
+
+        // Simulate token earning (replace with actual Twitch integration)
+        function addTokens(amount) {
+            userTokens += amount;
+            updateTokenDisplay();
+        }
+
+        // Initialize tokens on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTokenDisplay();
+            // Simulate starting with some tokens for testing
+            addTokens(3);
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             if (JUMPSCARE_IMAGE_SRC && JUMPSCARE_IMAGE_SRC !== 'images/your-scary-image.png') {
                 const img = new Image();
@@ -734,3 +988,4 @@ SUNDAY:   True Crime - 7 PM Central Time
     </script>
 </body>
 </html>
+`
