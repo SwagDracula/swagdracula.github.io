@@ -458,7 +458,7 @@
                 #2a0000 315deg 360deg
             );
             box-shadow: 0 0 20px #ff2a2a55, 0 0 40px #00000099 inset;
-            transition: transform 3s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .wheel-segment {
@@ -467,14 +467,21 @@
             height: 50%;
             transform-origin: 100% 100%;
             display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 20px;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 30px;
             font-family: 'Creepster', cursive;
-            font-size: 0.9em;
+            font-size: 0.8em;
             color: #fff;
             text-shadow: 1px 1px 2px #000;
             pointer-events: none;
+            clip-path: polygon(0% 100%, 0% 0%, 100% 100%);
+        }
+
+        .wheel-segment span {
+            transform: rotate(-22.5deg);
+            white-space: nowrap;
+            margin-left: 20px;
         }
 
         .wheel-segment:nth-child(1) { transform: rotate(0deg); }
@@ -686,14 +693,14 @@ SUNDAY:   True Crime - 7 PM Central Time
                         
                         <div class="wheel-wrapper">
                             <div class="wheel" id="spinWheel">
-                                <div class="wheel-segment" data-jumpscare="freddy">Freddy</div>
-                                <div class="wheel-segment" data-jumpscare="bonnie">Bonnie</div>
-                                <div class="wheel-segment" data-jumpscare="chica">Chica</div>
-                                <div class="wheel-segment" data-jumpscare="foxy">Foxy</div>
-                                <div class="wheel-segment" data-jumpscare="golden">Golden Freddy</div>
-                                <div class="wheel-segment" data-jumpscare="puppet">Puppet</div>
-                                <div class="wheel-segment" data-jumpscare="springtrap">Springtrap</div>
-                                <div class="wheel-segment" data-jumpscare="nightmare">Nightmare</div>
+                                <div class="wheel-segment" data-jumpscare="freddy"><span>Freddy</span></div>
+                                <div class="wheel-segment" data-jumpscare="bonnie"><span>Bonnie</span></div>
+                                <div class="wheel-segment" data-jumpscare="chica"><span>Chica</span></div>
+                                <div class="wheel-segment" data-jumpscare="foxy"><span>Foxy</span></div>
+                                <div class="wheel-segment" data-jumpscare="golden"><span>Golden</span></div>
+                                <div class="wheel-segment" data-jumpscare="puppet"><span>Puppet</span></div>
+                                <div class="wheel-segment" data-jumpscare="springtrap"><span>Spring</span></div>
+                                <div class="wheel-segment" data-jumpscare="nightmare"><span>Nightmare</span></div>
                             </div>
                             <div class="wheel-pointer"></div>
                         </div>
@@ -925,8 +932,16 @@ SUNDAY:   True Crime - 7 PM Central Time
             const segments = 8;
             const segmentAngle = 360 / segments;
             const randomSegment = Math.floor(Math.random() * segments);
-            const baseRotation = 360 * 5; // 5 full rotations
-            const finalRotation = baseRotation + (randomSegment * segmentAngle) + (segmentAngle / 2);
+            
+            // Much more dramatic spin - 8-12 full rotations
+            const minRotations = 8;
+            const maxRotations = 12;
+            const totalRotations = minRotations + Math.random() * (maxRotations - minRotations);
+            const baseRotation = 360 * totalRotations;
+            
+            // Add random extra degrees for more unpredictability
+            const extraDegrees = Math.random() * 360;
+            const finalRotation = baseRotation + (randomSegment * segmentAngle) + extraDegrees;
             
             wheel.style.transform = `rotate(${finalRotation}deg)`;
             
@@ -937,7 +952,7 @@ SUNDAY:   True Crime - 7 PM Central Time
                 
                 isSpinning = false;
                 updateTokenDisplay();
-            }, 3000);
+            }, 4000); // Longer duration for the longer spin
         }
 
         function triggerWheelJumpscare(type) {
